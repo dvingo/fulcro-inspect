@@ -284,7 +284,13 @@
       :else
       (do
         (js/console.log "ELSE")
-        (dom/div #js {:className "UNKNOWN"} (highlight (str content) search))))))
+        (dom/div #js {:className "UNKNOWN"}
+        (highlight
+          (try (str content)
+          (catch js/Object e (js/console.log "CAUGHT error for :else clause: " content)
+             (str "ERROR CONTENT " (type content)))
+          )
+          search))))))
 
 (fp/defsc DataViewer
   [this

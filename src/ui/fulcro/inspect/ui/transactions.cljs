@@ -335,9 +335,14 @@
                       :replay-tx (fn [{:keys [tx ident-ref]}]
                                    (fp/transact! this [`(replay-tx ~{:tx tx :tx-ref ident-ref})]))})}
 
+                                   (try
+                                     ;; todo narrow down where the failure happens
+                                     ;; by wrapping these parts in try catch
   (let [tx-list (if (seq tx-filter)
                   (filterv #(str/includes? (-> % :fulcro.history/tx str) tx-filter) tx-list)
                   tx-list)]
+                  (js/console.log "ACTIVE TX : " active-tx)
+
     (dom/div :.container
       (ui/toolbar {}
         (ui/toolbar-action {:onClick #(fp/transact! this [`(clear-transactions {})])}
@@ -354,6 +359,7 @@
                      {::on-select (fp/get-state this :select-tx)
                       ::on-replay (fp/get-state this :replay-tx)
                       ::selected? (= (::tx-id active-tx) (::tx-id %))})))))
+
       (if active-tx
         (ui/focus-panel {:style {:height (str (or (fp/get-state this :detail-height) 400) "px")}}
           (ui/drag-resize this {:attribute :detail-height :default 400}
@@ -362,6 +368,10 @@
               (ui/toolbar-action {:onClick #(mutations/set-value! this ::active-tx nil)}
                 (ui/icon {:title "Close panel"} :clear))))
           (ui/focus-panel-content {}
-            (transaction active-tx)))))))
+            (transaction active-tx)))))
+            )
+
+            (catch js/Object e (js/console.log "CAUGHT TRANSACTION LIST ERROR " e) "ERRORRRR"))
+            )
 
 (def transaction-list (fp/factory TransactionList {:keyfn ::tx-list-id}))
