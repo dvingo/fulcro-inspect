@@ -126,6 +126,7 @@
     (gobj/set this "frame-dom" (js/ReactDOM.findDOMNode (gobj/get this "frame-node"))))
 
   (render [this]
+    (js/console.log "inspect.core GLOBAL rendering GlobalInspector")
     (let [{:ui/keys [size visible? inspector historical-dom-view dock-side]} (fp/props this)
           {:keys [::multi-inspector/current-app]} inspector
           app       (::inspector/target-app current-app)

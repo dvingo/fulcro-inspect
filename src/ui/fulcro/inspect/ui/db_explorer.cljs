@@ -89,7 +89,7 @@
        (a {:href    "#"
            :title   (str v)
            :onClick #(select-ident v)}
-         (highlighter (pr-str ident) hl))))))
+         (highlighter (str ident) hl))))))
 
 (defn ui-db-key [env x]
   (cond
@@ -103,7 +103,7 @@
 
     (ident? x) (ui-ident env x)
 
-    :else (span {:style {:whiteSpace "nowrap"}} (pr-str x))))
+    :else (span {:style {:whiteSpace "nowrap"}} (str x))))
 
 (defn ui-db-value [{::keys [select-map] :as env} v k]
   (ui/code {}
@@ -123,7 +123,7 @@
       (and (vector? v) (every? ident? v))
       (fc/fragment (map (partial ui-ident env) v))
 
-      :else (pr-str v))))
+      :else (str v))))
 
 (defn ui-entity-level [this]
   (let [{:keys [current-state] :ui/keys [path]} (fc/props this)
@@ -152,6 +152,7 @@
         select-ident (fn [ident] (set-path! this ident))
         env          (assoc (settings-env this)
                        ::select-ident select-ident)]
+    (println "in ui-table-level")
     (ui/table {}
       (ui/thead {}
         (ui/tr {}
@@ -219,11 +220,11 @@
               (conj {:path  (conj path table-key entity-key)
                      :value (ENTITY re entity)}))))
         (ENTITY [re e] (->> e
-                            (filter (fn [[_ v]] (re-find re (pr-str v))))
+                            (filter (fn [[_ v]] (re-find re (str v))))
                             (into (empty e))))
         (VALUE [re path matches k v]
           (cond-> matches
-            (re-find re (pr-str v))
+            (re-find re (str v))
             (conj {:path  (conj path k)
                    :value v})))]
   (defn paths-to-values
@@ -240,7 +241,7 @@
                (if (table? table)
                  (reduce-kv (fn [paths id entity]
                               (cond-> paths
-                                (re-find re (pr-str id))
+                                (re-find re (str id))
                                 (conj {:path [table-key id]})))
                    paths table)
                  paths))
@@ -416,7 +417,7 @@
       :search (ui-search-results this)
       :table (ui-table-level this)
       :entity (ui-entity-level this)
-      (dom/div (str "Unrecognized mode " (pr-str explorer-mode))))))
+      (dom/div (str "Unrecognized mode " (str explorer-mode))))))
 
 (defsc DBExplorer [this _]
   {:ident         [::id ::id]

@@ -234,6 +234,7 @@
     :otherwise []))
 
 (defn render-data [{:keys [css search] :as input} content]
+  (js/console.log "rendering data: " content)
   (let [input (update input :expanded #(or % {}))]
     (cond
       (nil? content)
@@ -246,7 +247,9 @@
       (dom/div #js {:className (:keyword css)} (highlight (str content) search))
 
       (symbol? content)
-      (dom/div #js {:className (:symbol css)} (highlight (str content) search))
+      (do
+        (js/console.log "SYMBOL")
+        (dom/div #js {:className (:symbol css)} (highlight (str content) search)))
 
       (number? content)
       (dom/div #js {:className (:number css)} (highlight (str content) search))
@@ -260,19 +263,28 @@
                                                                                             search)))
 
       (map? content)
-      (render-map input content)
+      (do
+        (js/console.log "MAP")
+        (render-map input content))
 
       (vector? content)
-      (render-vector input content)
+      (do
+        (js/console.log "VECTOR")
+        (render-vector input content))
 
       (list? content)
-      (render-list input content)
+      (do
+        (js/console.log "LIST")
+        (render-list input content))
 
       (set? content)
-      (render-set input content)
+      (do (js/console.log "SET")
+          (render-set input content))
 
       :else
-      (dom/div #js {:className (:unknown css)} (highlight (str content) search)))))
+      (do
+        (js/console.log "ELSE")
+        (dom/div #js {:className "UNKNOWN"} (highlight (str content) search))))))
 
 (fp/defsc DataViewer
   [this
