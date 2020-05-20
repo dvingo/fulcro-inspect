@@ -18,17 +18,20 @@
 (declare TransactionRow)
 
 (defn format-data [event-data]
+  ;(js/console.log "FORMATTING DATA 1" (js/JSON.stringify (clj->js event-data)))
   (let [data           (or event-data {})
         {:keys [tx-data]} (css/get-classnames TransactionRow)
         formatted-data (pr-str data)
         result         (if (> (count formatted-data) 120)
                          (dom/pre {:className tx-data} (with-out-str (pprint data)))
                          (dom/pre {:className tx-data} formatted-data))]
+    ;(js/console.log "FORMATTING DATA: 2" )
     result))
 
 (defmulti format-tx (fn [tx] (first tx)))
 
-(defmethod format-tx :default [tx] (format-data tx))
+(defmethod format-tx :default [tx]
+  (format-data tx))
 (defmethod format-tx 'com.fulcrologic.fulcro.ui-state-machines/begin [tx]
   (let [args       (second tx)
         {:com.fulcrologic.fulcro.ui-state-machines/keys [asm-id event-data]} args
@@ -59,11 +62,21 @@
       ent/nbsp
       ent/nbsp
       (format-data query))))
+(def last-tx (atom nil))
 
 (fp/defsc TxPrinter
   [this {::keys [content]}]
   {}
-  (format-tx content))
+  (reset! last-tx content)
+    ;(js/console.log "IN TX PRINTER : " content)
+  (js/console.log "IN TX PRINTER")
+  (let [f (first content)]
+    (str (if (seq? f) (first f) f)))
+  ;"REMOVED"
+  ;(str content)
+  ;(pr-str content)
+  ;(format-tx content)
+  )
 
 (def tx-printer (fp/factory TxPrinter))
 

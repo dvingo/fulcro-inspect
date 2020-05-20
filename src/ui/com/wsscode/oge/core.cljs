@@ -23,12 +23,15 @@
 
 (mutations/defmutation normalize-result [_]
   (action [{:keys [ref state]}]
+    (js/console.log "IN NORMALIZE RESULT " (-> @state (get-in ref)))
     (let [result' (cond-> (-> @state (get-in ref) :oge/result')
                     (get @state ::p/errors) (assoc ::p/errors (->> (get @state ::p/errors)
                                                                    (into {} (map (fn [[k v]] [(vec (next k)) v]))))))
           profile (some-> result' ::pp/profile)
-          result  (db.h/pprint (dissoc result' ::pp/profile))]
-      (swap! state update-in ref merge {:oge/result  result
+          result*  (db.h/pprint (dissoc result' ::pp/profile))]
+          (js/console.log "IN NORMALIZE RESULT': " result')
+          (js/console.log "IN NORMALIZE RESULT*: " result*)
+      (swap! state update-in ref merge {:oge/result  result*
                                         :oge/profile profile}))))
 
 (def inspect-readers
@@ -141,6 +144,7 @@
                    [:.flex {:flex "1"}]]
    :css-include   [ui/CSS]}
 
+   (js/console.log "RESULT: "  result)
   (let [index-marker (get-in props [fetch/marker-table (keyword "oge-index" id)])
         query-marker (get-in props [fetch/marker-table (keyword "oge-query" id)])
         run-query    (fn [_]

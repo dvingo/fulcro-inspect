@@ -5,12 +5,9 @@
 
 (fp/defui ^:once RelationGraph
   Object
-  (componentDidMount [_]
-    )
-
+  (componentDidMount [_])
   (render [this]
     (let [{:keys []} (fp/props this)]
-      (dom/div nil
-        ))))
+      (dom/div nil))))
 
 (def relation-graph (fp/factory RelationGraph))

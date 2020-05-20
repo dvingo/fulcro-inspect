@@ -207,6 +207,7 @@
 
 (defn handle-remote-message [{:keys [port event responses*]}]
   (when-let [{:keys [type data]} (event-data event)]
+    (js/console.log "handle-remote-message: " type " data : " data)
     (let [data (assoc data ::port port)]
       (case type
         :fulcro.inspect.client/init-app

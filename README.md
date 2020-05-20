@@ -31,7 +31,7 @@ Be sure to reload your page after installing it. Now you can see the Fulcro logo
 
 Do *not* include this library as a dependency. Inspect is written in Fulcro 2.x, and adding it
 to your dependencies will confuse you by having two different version of Fulcro (which can co-exist, but will cause confusion).
-Instead just install the Chrome 
+Instead just install the Chrome
 extension https://chrome.google.com/webstore/detail/fulcro-inspect/meeijplnfjcihnhkpanepcaffklobaal
 and add the following preload to your shadow-cljs config:
 
@@ -44,16 +44,16 @@ That preload is actually part of Fulcro 3.x itself.
 
 ## Using the Fulcro 3.x Electron App
 
-Fulcro Inspect now has a standalone electron app. This only works with 
+Fulcro Inspect now has a standalone electron app. This only works with
 Fulcro 3, and there are no plans to back-port to 2.x. You can download
 a release for your platform in the Releases section of this repository.
 
 https://github.com/fulcrologic/fulcro-inspect/releases
 
-NOTE: Fulcrologic does not currently have signing keys, so these binaries 
-will complain that they are unsigned. 
+NOTE: Fulcrologic does not currently have signing keys, so these binaries
+will complain that they are unsigned.
 
-The Electron app creates a well-known websocket server port that Fulcro 
+The Electron app creates a well-known websocket server port that Fulcro
 applications can connect to for exchanging inspect messages. This means
 you need to have your application configured with a different preload
 that knows how to connect.
@@ -75,7 +75,7 @@ To use the electron inspect make sure you add this preload to your preloads:
            :preloads        [com.fulcrologic.fulcro.inspect.websocket-preload]}
 ```
 
-or call the function `com.fulcrologic.fulcro.inspect.inspect-client/install-ws` somewhere in your 
+or call the function `com.fulcrologic.fulcro.inspect.inspect-client/install-ws` somewhere in your
 development startup.
 
 ### Choosing the Websocket Port
@@ -150,13 +150,13 @@ and navigate to the `releases/chrome` diretory to load the extension from there.
 To run the development version of the extension, first install the npm packages:
 
 ```
-npm install
+yarn install
 ```
 
 And then run the shadow compilation:
 
 ```
-npm run dev-chrome
+yarn run dev-chrome
 ```
 
 The go in at Chrome extensions and add the unpackaged version from the path `shells/chrome`.
