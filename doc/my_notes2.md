@@ -31,3 +31,5 @@ fulcro.inspect.ui.db-explorer
 Main UI class:
 
 fulcro.inspect.ui.multi-inspector
+
+i should debug the actual call. I think it's pr-str of the output of transit?

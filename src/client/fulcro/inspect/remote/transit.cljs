@@ -29,4 +29,19 @@
   (let [writer (ft/writer {:handlers write-handlers})]
     (t/write writer x)))
 
+
 (extend-type ty/UUID IUUID)
+
+(comment
+  (defrecord TestIt [a])
+  (def wr (t/writer :json {:handlers write-handlers}))
+  (def re (t/reader :json))
+  (t/read re (t/write wr "hi"))
+  (t/read re (t/write wr ["hello wordl"]))
+(t/read re (t/write wr (TestIt. 5)))
+(t/read re "[\"~#unknown\",\"#fulcro.inspect.remote.transit.TestIt{:a 5}\"]")
+
+ ;; (read (write (TestIt. 5)))
+
+  ;;(write "hello")
+  )
