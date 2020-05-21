@@ -19,7 +19,8 @@
    "default"               (DefaultHandler.)})
 
 (def read-handlers
-  {"js-error" (fn [[msg data]] (ex-info msg data))})
+  {"js-error" (fn [[msg data]] (ex-info msg data))
+   "unknown" (fn [v] (str "UknownTransitType:" v))})
 
 (defn read [str]
   (let [reader (ft/reader {:handlers read-handlers})]
@@ -29,18 +30,19 @@
   (let [writer (ft/writer {:handlers write-handlers})]
     (t/write writer x)))
 
-
 (extend-type ty/UUID IUUID)
 
+(defrecord TestIt [a])
+(def wr (t/writer :json {:handlers write-handlers}))
+(def re (t/reader :json))
 (comment
-  (defrecord TestIt [a])
-  (def wr (t/writer :json {:handlers write-handlers}))
-  (def re (t/reader :json))
   (t/read re (t/write wr "hi"))
   (t/read re (t/write wr ["hello wordl"]))
+  (write (TestIt. 5))
 (t/read re (t/write wr (TestIt. 5)))
-(t/read re "[\"~#unknown\",\"#fulcro.inspect.remote.transit.TestIt{:a 5}\"]")
+  (t/read re "[\"~#unknown\",\"#fulcro.inspect.remote.transit.TestIt{:a 5}\"]")
 
+  (read "[\"~#unknown\",\"#fulcro.inspect.remote.transit.TestIt{:a 5}\"]")
  ;; (read (write (TestIt. 5)))
 
   ;;(write "hello")
